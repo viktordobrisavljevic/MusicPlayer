@@ -15,7 +15,8 @@ function expandLibrary() {
                 playlistsHTML += '<h3>Playlists:</h3>';
 
                 data.forEach(library => {
-                    playlistsHTML += `<p style="cursor:pointer;" onclick="showSongsInLibrary(${library.id})">${library.name}</p>`;
+                    playlistsHTML += `<p style="cursor:pointer; display:inline;" onclick="showSongsInLibrary(${library.id})">${library.name}</p>
+                    <a href="#" style="cursor: pointer;" onclick="removeLibrary(${library.id})">x</a><br>`;
                 });
 
                 playlistsHTML += '</div>';
@@ -80,7 +81,8 @@ function updateLibraryList() {
             playlistsHTML += '<h3>Playlists:</h3>';
 
             data.forEach(library => {
-                playlistsHTML += `<p style="cursor: pointer;" onclick="showSongsInLibrary(${library.id})">${library.name}</p>`;
+                playlistsHTML += `<p style="cursor: pointer; display:inline;" onclick="showSongsInLibrary(${library.id})">${library.name}</p>
+                <a href="#" style="cursor: pointer;" onclick="removeLibrary(${library.id})">x</a><br>`;
             });
 
             playlistsHTML += '</div>';
@@ -110,7 +112,11 @@ function showSongsInLibrary(libraryId) {
                 playlistContainer.innerHTML = '<li>No songs in this playlist.</li>';
             } else {
                 songs.forEach(song => {
-                    playlistContainer.innerHTML += `<li><p style="cursor: pointer;" class="song-button" data-name="${song.name}" data-id="${song.id}">${song.name}</p></li>`;
+                    playlistContainer.innerHTML += `
+                    <li>
+                        <p style="cursor: pointer; display: inline;" class="song-button" data-name="${song.name}" data-id="${song.id}">${song.name}</p>
+                        <a href="#" style="cursor: pointer;" onclick="removeSong(${libraryId},${song.id})">x</a>
+                    </li>`;
                 });
 
                 const songButtons = playlistContainer.querySelectorAll('.song-button');
@@ -126,6 +132,7 @@ function showSongsInLibrary(libraryId) {
                         audioPlayer.pause();
                         audioPlayer.load();
                         audioPlayer.play();
+
 
                         fetch(`/api/song/${songName}`)
                             .then(response => response.json())
@@ -173,8 +180,75 @@ function loadSongFromURL() {
     }
 }
 
+function removeLibrary(libraryId){
+    fetch(`/libraries/${libraryId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("Successfully deleted!");
+        } else {
+            console.log("Error deleting!");
+        }
+    })
+}
+
+function removeSong(libraryId, songId){
+    fetch(`/api/${libraryId}/${songId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Song successfully removed from library!');
+        } else {
+            alert('Failed to remove song from library');
+        }
+    })
+}
+
+function generateBars() {
+    const soundWaveContainer = document.querySelector('.sound-wave');
+    const numberOfBars = 60;
+    for (let i = 0; i < numberOfBars; i++) {
+        const bar = document.createElement('div');
+        bar.classList.add('bar');
+        soundWaveContainer.appendChild(bar);
+    }
+}
+
+window.addEventListener("load", () => {
+    const bars = document.querySelectorAll(".bar");
+
+    bars.forEach((item) => {
+        const randomDuration = (Math.random() * (0.7 - 0.2) + 0.2).toFixed(2);
+        item.style.animationDuration = `${randomDuration}s`;
+    });
+
+    const audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.addEventListener('play', function() {
+        const bars = document.querySelectorAll('.bar');
+        bars.forEach(bar => {
+            bar.style.animationPlayState = 'running';
+        });
+    });
+
+    audioPlayer.addEventListener('pause', function() {
+        const bars = document.querySelectorAll('.bar');
+        bars.forEach(bar => {
+            bar.style.animationPlayState = 'paused';
+        });
+    });
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     loadSongFromURL();
     expandLibrary();
+    generateBars();
 });
+

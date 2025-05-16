@@ -100,12 +100,13 @@ audio::-webkit-media-controls-panel, video::-webkit-media-controls-panel {
     height: 570px;
 }
 
-.controls-container{
+.animation-container{
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    font-size: 60px;
     padding-bottom: 20px;
+    height: 595px;
+    background-color: #606e6e;
 }
 
 .content{
@@ -248,7 +249,7 @@ th{
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
@@ -286,4 +287,67 @@ th{
 
 .modal-content > button:hover {
     background-color: rgb(100, 150, 120);
+}
+
+/* Player animation */
+.sound-wave {
+    display: inline-flex;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+}
+
+.bar {
+    animation-name: wave-lg;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-direction: alternate;
+    animation-play-state: paused;
+    background: rgb(26 29 55);
+    margin: 0 1.5px;
+    height: 10px;
+    width: 10px;
+}
+
+.bar:nth-child(-n + 7),
+.bar:nth-last-child(-n + 7) {
+    animation-name: wave-md;
+}
+
+.bar:nth-child(-n + 3),
+.bar:nth-last-child(-n + 3) {
+    animation-name: wave-sm;
+}
+
+@keyframes wave-sm {
+    0% {
+        opacity: 0.35;
+        height: 75px;
+    }
+    100% {
+        opacity: 1;
+        height: 150px;
+    }
+}
+
+@keyframes wave-md {
+    0% {
+        opacity: 0.35;
+        height: 100px;
+    }
+    100% {
+        opacity: 1;
+        height: 275px;
+    }
+}
+
+@keyframes wave-lg {
+    0% {
+        opacity: 0.35;
+        height: 100px;
+    }
+    100% {
+        opacity: 1;
+        height: 375px;
+    }
 }

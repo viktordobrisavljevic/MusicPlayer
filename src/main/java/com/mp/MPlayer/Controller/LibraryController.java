@@ -44,4 +44,9 @@ public class LibraryController {
     public Set<Song> getSongsInLibrary(@PathVariable Long libraryId) {
         return libraryService.getSongsInLibrary(libraryId);
     }
+
+    @DeleteMapping("/{libraryId}")
+    public void deleteLibrary(@PathVariable Long libraryId) {
+        libraryService.deleteLibrary(libraryId);
+    }
 }

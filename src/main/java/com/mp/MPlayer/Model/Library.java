@@ -20,7 +20,7 @@ public class Library {
     @Column(name = "member_name")
     private String customUserName;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "library_song",
             joinColumns = @JoinColumn(name = "library_id"),
